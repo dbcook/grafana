@@ -1,14 +1,15 @@
 define(['angular',
   'lodash',
+  'jquery',
   'require',
   'app/core/config',
 ],
-function (angular, _, require, config) {
+function (angular, _, $, require, config) {
   'use strict';
 
   var module = angular.module('grafana.controllers');
 
-  module.controller('ShareModalCtrl', function($scope, $rootScope, $location, $timeout, timeSrv, $element, templateSrv, linkSrv) {
+  module.controller('ShareModalCtrl', function($scope, $rootScope, $location, $timeout, timeSrv, templateSrv, linkSrv) {
 
     $scope.options = { forCurrent: true, includeTemplateVars: true, theme: 'current' };
     $scope.editor = { index: $scope.tabIndex || 0};
@@ -29,7 +30,7 @@ function (angular, _, require, config) {
         $scope.tabs.push({title: 'Snapshot', src: 'shareSnapshot.html'});
       }
 
-      if (!$scope.dashboard.meta.isSnapshot) {
+      if (!$scope.dashboard.meta.isSnapshot && !$scope.modeSharePanel) {
         $scope.tabs.push({title: 'Export', src: 'shareExport.html'});
       }
 
@@ -88,11 +89,14 @@ function (angular, _, require, config) {
 
   module.directive('clipboardButton',function() {
     return function(scope, elem) {
-      require(['vendor/zero_clipboard'], function(ZeroClipboard) {
-        ZeroClipboard.config({
-          swfPath: config.appSubUrl + '/public/vendor/zero_clipboard.swf'
-        });
-        new ZeroClipboard(elem[0]);
+      require(['vendor/clipboard/dist/clipboard'], function(Clipboard) {
+        scope.clipboard = new Clipboard(elem[0]);
+      });
+
+      scope.$on('$destroy', function() {
+        if (scope.clipboard) {
+          scope.clipboard.destroy();
+        }
       });
     };
   });

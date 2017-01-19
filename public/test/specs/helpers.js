@@ -92,7 +92,6 @@ define([
     self.timeSrv = new TimeSrvStub();
     self.datasourceSrv = {};
     self.backendSrv = {};
-    self.$location = {};
     self.$routeParams = {};
 
     this.providePhase = function(mocks) {
@@ -104,10 +103,11 @@ define([
     };
 
     this.createService = function(name) {
-      return inject(function($q, $rootScope, $httpBackend, $injector) {
+      return inject(function($q, $rootScope, $httpBackend, $injector, $location) {
         self.$q = $q;
         self.$rootScope = $rootScope;
         self.$httpBackend =  $httpBackend;
+        self.$location = $location;
 
         self.$rootScope.onAppEvent = function() {};
         self.$rootScope.appEvent = function() {};
@@ -158,9 +158,11 @@ define([
       return _.template(text, this.templateSettings)(this.data);
     };
     this.init = function() {};
+    this.getAdhocFilters = function() { return []; };
     this.fillVariableValuesForUrl = function() {};
     this.updateTemplateData = function() { };
     this.variableExists = function() { return false; };
+    this.variableInitialized = function() { };
     this.highlightVariablesAsHtml = function(str) { return str; };
     this.setGrafanaVariable = function(name, value) {
       this.data[name] = value;
