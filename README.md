@@ -132,6 +132,14 @@ go get github.com/Unknwon/bra
 bra run
 ```
 
+### Packaging
+To build .deb packages you need ruby, gem and fpm.
+```bash
+sudo gem install fpm
+go run build.go pkg-deb
+```
+
+
 ### Running
 ```bash
 ./bin/grafana-server
